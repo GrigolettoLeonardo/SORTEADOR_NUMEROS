@@ -85,14 +85,31 @@ function mostraResultado(){
 
 }
 
-function reiniciar(){
-    
-}
-
-
 
 function sortear(){
     let valoresUsuario = pegandoParametros();
     verificacaoInput(valoresUsuario);
+    verificacaoReiniciar();
 
+}
+
+function verificacaoReiniciar(){
+    let botaoReiniciar = document.getElementById("btn-reiniciar");
+
+    if (botaoReiniciar.classList.contains("container__botao-desabilitado")){
+        botaoReiniciar.classList.remove("container__botao-desabilitado");
+        botaoReiniciar.classList.add("container__botao");
+    } else{
+        botaoReiniciar.classList.add("container__botao-desabilitado");
+        botaoReiniciar.classList.remove("container__botao");
+    }
+}
+
+function reiniciar(){
+
+    document.getElementById("quantidade").value = null;
+    document.getElementById("de").value = null;
+    document.getElementById("ate").value = null;
+    verificacaoReiniciar();
+       
 }
