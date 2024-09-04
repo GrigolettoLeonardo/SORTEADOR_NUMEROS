@@ -79,9 +79,9 @@ function mostraResultado(){
 
     let valoresFinais = numerosCrescentes();
     console.log(valoresFinais);
-    const resultadoDiv = document.getElementById("resultado");
-    const resultadoLabel = resultadoDiv.firstChild;
-    resultadoLabel.textContent =`Os números aleatórios gerados são: ${valoresFinais}`;
+    let resultadoDiv = document.getElementById("resultado");
+    resultadoDiv.innerHTML = `<label class="texto__paragrafo">Números sorteados:  ${valoresFinais}</label>`;
+   
 
 }
 
