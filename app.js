@@ -1,108 +1,104 @@
-//Pegando valores
-function pegandoParametros(){
-    let idS = ["quantidade","de","ate"];
-    let valoresInput=[];
-    let coletaInput;
-    
-    for(i=0;i<idS.length;i++){
-        coletaInput = parseInt(document.getElementById(idS[i]).value);
-        valoresInput.push(coletaInput);
-    }
+function pegandoValores(){
+    let ids = ["quantidade","de","ate"];
+    let valor;
+    let valores = [];
 
-    return valoresInput;
+    for(i=0;i<ids.length;i++){
+        valor = parseInt(document.getElementById(ids[i]).value);
+        valores.push(valor);
+    }
+    return valores;
 }
 
-function verificacaoInput(listaEntrada){
-    let valoresEntrada = listaEntrada;
+function verificacaoUsuario(input){
 
-    if (valoresEntrada[0]>0){
+    let entradas = input;
+    let status;
+    let valorFimUsua= document.getElementById("resultado");
 
-        if(valoresEntrada[1] > valoresEntrada[2]){
-            alert(`O primeiro valor ${valoresEntrada[1]} tem que ser menor que o segundo valor ${valoresEntrada[2]}`);
-        } else{
-            mostraResultado();
-        }
-
+    if (entradas[1]>entradas[2]){
+        status = "erro";
+        valorFimUsua.innerHTML = `<label class="texto__paragrafo">Números sorteados: Erro </label>`;
     } else{
-
-        alert("Valor de entrada tem que ser maior que 0!!")
-        
+        status ="certo";
     }
+
+    return status;
 }
 
+function gerandoNumerosAletorios(){
 
-function gerandoNumeroSecreto(){
-
-    let valores = pegandoParametros();
-    let quantidade = valores[0];
-    let menorValor = valores[1];
-    let maiorValor = valores[2];
-    let resultados = [];
+    let valoresRecebidos = pegandoValores();
+    let maiorValor = valoresRecebidos[2];
+    let menorValor = valoresRecebidos[1];
+    let qtd = valoresRecebidos[0];
     let numeroAleatorio;
-    let somador = 0;
+    let numerosFinais = [];
 
-    //Loop para não repetir valores
-    while(somador<=quantidade){
+    //Verificação para não gerar número repetido
+    for(i=0;i<qtd;i++){
+        numeroAleatorio = Math.floor(Math.random() * (maiorValor-menorValor+1)) + menorValor;
 
-        numeroAleatorio = Math.floor(Math.random() * (maiorValor - menorValor + 1)) + menorValor;
-
-        if(resultados.includes(numeroAleatorio)){
-            continue;
-        } else{
-            resultados.push(numeroAleatorio);            
+        while(numerosFinais.includes(numeroAleatorio)){
+            numeroAleatorio = Math.floor(Math.random() * (maiorValor-menorValor+1)) + menorValor;
         }
-        somador ++;
+        numerosFinais.push(numeroAleatorio);       
     }
-    return resultados;
+    return numerosFinais;
 }
 
-function numerosCrescentes(){
+function aletaorioCrescente(){
 
-    let valoresAleatorios = gerandoNumeroSecreto();
-    let valoresCrescente = [];
-    let menorValor;
-    let indiceMenorValor;
+    let valoresFinais = gerandoNumerosAletorios();
+    let valoresCrescentes = [];
+    let valorMenor;
+    let indiceValorMenor;
 
-    console.log(valoresAleatorios);
-
-    for(i=valoresAleatorios.length - 1;i>=0;i--){
-        menorValor = Math.min(...valoresAleatorios);
-        indiceMenorValor = valoresAleatorios.indexOf(menorValor);
-        valoresCrescente.push(menorValor);
-        valoresAleatorios.splice(indiceMenorValor,1);
-    }   
-    return valoresCrescente;
-}
-
-
-function mostraResultado(){
-
-    let valoresFinais = numerosCrescentes();
     console.log(valoresFinais);
-    let resultadoDiv = document.getElementById("resultado");
-    resultadoDiv.innerHTML = `<label class="texto__paragrafo">Números sorteados:  ${valoresFinais}</label>`;
-   
-
+    for(i=valoresFinais.length-1;i>=0;i--){
+        valorMenor = Math.min(...valoresFinais);
+        indiceValorMenor = valoresFinais.indexOf(valorMenor);
+        valoresCrescentes.push(valorMenor);
+        valoresFinais.splice(indiceValorMenor,1);
+    }
+    return valoresCrescentes
 }
 
-
-function sortear(){
-    let valoresUsuario = pegandoParametros();
-    verificacaoInput(valoresUsuario);
-    verificacaoReiniciar();
-
+function escreverValores(resultados){
+    let valorFimUsua= document.getElementById("resultado");
+    valorFimUsua.innerHTML = `<label class="texto__paragrafo">Números sorteados:  ${resultados}</label>`;
 }
 
 function verificacaoReiniciar(){
-    let botaoReiniciar = document.getElementById("btn-reiniciar");
 
-    if (botaoReiniciar.classList.contains("container__botao-desabilitado")){
-        botaoReiniciar.classList.remove("container__botao-desabilitado");
-        botaoReiniciar.classList.add("container__botao");
+    let btReiniciar = document.getElementById("btn-reiniciar");
+
+    if (btReiniciar.classList.contains("container__botao-desabilitado")){
+
+        btReiniciar.classList.remove("container__botao-desabilitado");
+        btReiniciar.classList.add("container__botao");
+
     } else{
-        botaoReiniciar.classList.add("container__botao-desabilitado");
-        botaoReiniciar.classList.remove("container__botao");
+        btReiniciar.classList.add("container__botao-desabilitado");
+        btReiniciar.classList.remove("container__botao");
     }
+}
+
+function sortear(){
+
+    let valoresVerificar = pegandoValores();
+    let verificaInput = verificacaoUsuario(valoresVerificar);
+    if (verificaInput=="erro"){
+
+        alert("O parâmetro (Do número) tem que ser menor que o (Até o número)");
+
+    } else{
+        let numerosFinais = aletaorioCrescente();
+        console.log(numerosFinais);
+        escreverValores(numerosFinais);
+        verificacaoReiniciar();
+    }
+
 }
 
 function reiniciar(){
@@ -111,5 +107,5 @@ function reiniciar(){
     document.getElementById("de").value = null;
     document.getElementById("ate").value = null;
     verificacaoReiniciar();
-       
 }
+
